@@ -1,14 +1,4 @@
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
 define("ngx-modal/Modal", ["require", "exports", "@angular/core"], function (require, exports, core_1) {
-    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var ModalHeader = (function () {
         function ModalHeader() {
@@ -106,13 +96,10 @@ define("ngx-modal/Modal", ["require", "exports", "@angular/core"], function (req
         // -------------------------------------------------------------------------
         // Private Methods
         // -------------------------------------------------------------------------
-        Modal.prototype.backdropClick = function (event) {
-            if (this.closeOnOutsideClick === true && !this.contentEl.nativeElement.contains(event.target)) {
+        Modal.prototype.checkClose = function (event) {
+            if (this.closeOnOutsideClick === true && this.modalRoot.nativeElement === event.target) {
                 this.close();
             }
-        };
-        Modal.prototype.preventClosing = function (event) {
-            event.stopPropagation();
         };
         Modal.prototype.createBackDrop = function () {
             this.backdropElement = document.createElement("div");
@@ -173,14 +160,13 @@ define("ngx-modal/Modal", ["require", "exports", "@angular/core"], function (req
     Modal = __decorate([
         core_1.Component({
             selector: "modal",
-            template: "\n<div class=\"modal\" \n     tabindex=\"-1\"\n     role=\"dialog\"\n     #modalRoot\n     (keydown.esc)=\"closeOnEscape ? close() : 0\"\n     [ngClass]=\"{ in: isOpened, fade: isOpened }\"\n     [ngStyle]=\"{ display: isOpened ? 'block' : 'none' }\"\n     (click)=\"backdropClick($event)\">\n    <div [class]=\"'modal-dialog ' + modalClass\" #modalContent>\n        <div class=\"modal-content\" tabindex=\"0\" *ngIf=\"isOpened\">\n            <div class=\"modal-header\">\n                <button *ngIf=\"!hideCloseButton\" type=\"button\" class=\"close\" data-dismiss=\"modal\" [attr.aria-label]=\"cancelButtonLabel || 'Close'\" (click)=\"close()\"><span aria-hidden=\"true\">&times;</span></button>\n                <h4 class=\"modal-title\" *ngIf=\"title\">{{ title }}</h4>\n                <ng-content select=\"modal-header\"></ng-content>\n            </div>\n            <div class=\"modal-body\">\n                <ng-content select=\"modal-content\"></ng-content>\n            </div>\n            <div class=\"modal-footer\">\n                <ng-content select=\"modal-footer\"></ng-content>\n                <button *ngIf=\"cancelButtonLabel\" type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" (click)=\"close()\">{{ cancelButtonLabel }}</button>\n                <button *ngIf=\"submitButtonLabel\" type=\"button\" class=\"btn btn-primary\" (click)=\"onSubmit.emit(undefined)\">{{ submitButtonLabel }}</button>\n            </div>\n        </div>\n    </div>\n</div>\n"
+            template: "\n<div class=\"modal\" \n     tabindex=\"-1\"\n     role=\"dialog\"\n     #modalRoot\n     (keydown.esc)=\"closeOnEscape ? close() : 0\"\n     [ngClass]=\"{ in: isOpened, fade: isOpened }\"\n     [ngStyle]=\"{ display: isOpened ? 'block' : 'none' }\"\n     (click)=\"checkClose($event)\">\n    <div [class]=\"'modal-dialog ' + modalClass\" #modalContent>\n        <div class=\"modal-content\" tabindex=\"0\" *ngIf=\"isOpened\">\n            <div class=\"modal-header\">\n                <button *ngIf=\"!hideCloseButton\" type=\"button\" class=\"close\" data-dismiss=\"modal\" [attr.aria-label]=\"cancelButtonLabel || 'Close'\" (click)=\"close()\"><span aria-hidden=\"true\">&times;</span></button>\n                <h4 class=\"modal-title\" *ngIf=\"title\">{{ title }}</h4>\n                <ng-content select=\"modal-header\"></ng-content>\n            </div>\n            <div class=\"modal-body\">\n                <ng-content select=\"modal-content\"></ng-content>\n            </div>\n            <div class=\"modal-footer\">\n                <ng-content select=\"modal-footer\"></ng-content>\n                <button *ngIf=\"cancelButtonLabel\" type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" (click)=\"close()\">{{ cancelButtonLabel }}</button>\n                <button *ngIf=\"submitButtonLabel\" type=\"button\" class=\"btn btn-primary\" (click)=\"onSubmit.emit(undefined)\">{{ submitButtonLabel }}</button>\n            </div>\n        </div>\n    </div>\n</div>\n"
         }),
         __metadata("design:paramtypes", [])
     ], Modal);
     exports.Modal = Modal;
 });
 define("ngx-modal/RouteModal", ["require", "exports", "@angular/core", "@angular/router"], function (require, exports, core_2, router_1) {
-    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var RouteModal = (function () {
         // -------------------------------------------------------------------------
@@ -258,7 +244,7 @@ define("ngx-modal/RouteModal", ["require", "exports", "@angular/core", "@angular
         // Private Methods
         // -------------------------------------------------------------------------
         RouteModal.prototype.checkClose = function (event) {
-            if (this.closeOnOutsideClick === true && !this.contentEl.nativeElement.contains(event.target)) {
+            if (this.closeOnOutsideClick === true && this.modalRoot.nativeElement === event.target) {
                 this.close();
             }
         };
@@ -343,7 +329,6 @@ define("ngx-modal/RouteModal", ["require", "exports", "@angular/core", "@angular
     exports.RouteModal = RouteModal;
 });
 define("ngx-modal/index", ["require", "exports", "ngx-modal/Modal", "ngx-modal/RouteModal", "@angular/core", "@angular/common", "ngx-modal/Modal", "ngx-modal/RouteModal"], function (require, exports, Modal_1, RouteModal_1, core_3, common_1, Modal_2, RouteModal_2) {
-    "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Modal = Modal_2.Modal;
     exports.ModalContent = Modal_2.ModalContent;
@@ -377,7 +362,6 @@ define("ngx-modal/index", ["require", "exports", "ngx-modal/Modal", "ngx-modal/R
     exports.ModalModule = ModalModule;
 });
 define("ngx-modal", ["require", "exports", "ngx-modal/index"], function (require, exports, index_1) {
-    "use strict";
     function __export(m) {
         for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
     }

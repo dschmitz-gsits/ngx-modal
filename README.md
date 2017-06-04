@@ -64,7 +64,7 @@ then `<route-modal></route-modal>` should be used instead.
 
 ## Sample
 
-```typescript
+```javascript
 import {Component} from "@angular/core";
 import {ModalModule} from "ngx-modal";
 

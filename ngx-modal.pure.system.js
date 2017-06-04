@@ -104,13 +104,10 @@ System.register("ngx-modal/Modal", ["@angular/core"], function (exports_1, conte
                 // -------------------------------------------------------------------------
                 // Private Methods
                 // -------------------------------------------------------------------------
-                Modal.prototype.backdropClick = function (event) {
-                    if (this.closeOnOutsideClick === true && !this.contentEl.nativeElement.contains(event.target)) {
+                Modal.prototype.checkClose = function (event) {
+                    if (this.closeOnOutsideClick === true && this.modalRoot.nativeElement === event.target) {
                         this.close();
                     }
-                };
-                Modal.prototype.preventClosing = function (event) {
-                    event.stopPropagation();
                 };
                 Modal.prototype.createBackDrop = function () {
                     this.backdropElement = document.createElement("div");
@@ -171,7 +168,7 @@ System.register("ngx-modal/Modal", ["@angular/core"], function (exports_1, conte
             Modal = __decorate([
                 core_1.Component({
                     selector: "modal",
-                    template: "\n<div class=\"modal\" \n     tabindex=\"-1\"\n     role=\"dialog\"\n     #modalRoot\n     (keydown.esc)=\"closeOnEscape ? close() : 0\"\n     [ngClass]=\"{ in: isOpened, fade: isOpened }\"\n     [ngStyle]=\"{ display: isOpened ? 'block' : 'none' }\"\n     (click)=\"backdropClick($event)\">\n    <div [class]=\"'modal-dialog ' + modalClass\" #modalContent>\n        <div class=\"modal-content\" tabindex=\"0\" *ngIf=\"isOpened\">\n            <div class=\"modal-header\">\n                <button *ngIf=\"!hideCloseButton\" type=\"button\" class=\"close\" data-dismiss=\"modal\" [attr.aria-label]=\"cancelButtonLabel || 'Close'\" (click)=\"close()\"><span aria-hidden=\"true\">&times;</span></button>\n                <h4 class=\"modal-title\" *ngIf=\"title\">{{ title }}</h4>\n                <ng-content select=\"modal-header\"></ng-content>\n            </div>\n            <div class=\"modal-body\">\n                <ng-content select=\"modal-content\"></ng-content>\n            </div>\n            <div class=\"modal-footer\">\n                <ng-content select=\"modal-footer\"></ng-content>\n                <button *ngIf=\"cancelButtonLabel\" type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" (click)=\"close()\">{{ cancelButtonLabel }}</button>\n                <button *ngIf=\"submitButtonLabel\" type=\"button\" class=\"btn btn-primary\" (click)=\"onSubmit.emit(undefined)\">{{ submitButtonLabel }}</button>\n            </div>\n        </div>\n    </div>\n</div>\n"
+                    template: "\n<div class=\"modal\" \n     tabindex=\"-1\"\n     role=\"dialog\"\n     #modalRoot\n     (keydown.esc)=\"closeOnEscape ? close() : 0\"\n     [ngClass]=\"{ in: isOpened, fade: isOpened }\"\n     [ngStyle]=\"{ display: isOpened ? 'block' : 'none' }\"\n     (click)=\"checkClose($event)\">\n    <div [class]=\"'modal-dialog ' + modalClass\" #modalContent>\n        <div class=\"modal-content\" tabindex=\"0\" *ngIf=\"isOpened\">\n            <div class=\"modal-header\">\n                <button *ngIf=\"!hideCloseButton\" type=\"button\" class=\"close\" data-dismiss=\"modal\" [attr.aria-label]=\"cancelButtonLabel || 'Close'\" (click)=\"close()\"><span aria-hidden=\"true\">&times;</span></button>\n                <h4 class=\"modal-title\" *ngIf=\"title\">{{ title }}</h4>\n                <ng-content select=\"modal-header\"></ng-content>\n            </div>\n            <div class=\"modal-body\">\n                <ng-content select=\"modal-content\"></ng-content>\n            </div>\n            <div class=\"modal-footer\">\n                <ng-content select=\"modal-footer\"></ng-content>\n                <button *ngIf=\"cancelButtonLabel\" type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" (click)=\"close()\">{{ cancelButtonLabel }}</button>\n                <button *ngIf=\"submitButtonLabel\" type=\"button\" class=\"btn btn-primary\" (click)=\"onSubmit.emit(undefined)\">{{ submitButtonLabel }}</button>\n            </div>\n        </div>\n    </div>\n</div>\n"
                 }),
                 __metadata("design:paramtypes", [])
             ], Modal);
@@ -268,7 +265,7 @@ System.register("ngx-modal/RouteModal", ["@angular/core", "@angular/router"], fu
                 // Private Methods
                 // -------------------------------------------------------------------------
                 RouteModal.prototype.checkClose = function (event) {
-                    if (this.closeOnOutsideClick === true && !this.contentEl.nativeElement.contains(event.target)) {
+                    if (this.closeOnOutsideClick === true && this.modalRoot.nativeElement === event.target) {
                         this.close();
                     }
                 };

@@ -24,7 +24,6 @@ export declare class Modal {
     ngOnDestroy(): void;
     open(...args: any[]): void;
     close(...args: any[]): void;
-    private backdropClick(event);
-    preventClosing(event: MouseEvent): void;
+    private checkClose(event);
     private createBackDrop();
 }

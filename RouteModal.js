@@ -87,7 +87,7 @@ var RouteModal = (function () {
     // Private Methods
     // -------------------------------------------------------------------------
     RouteModal.prototype.checkClose = function (event) {
-        if (this.closeOnOutsideClick === true && !this.contentEl.nativeElement.contains(event.target)) {
+        if (this.closeOnOutsideClick === true && this.modalRoot.nativeElement === event.target) {
             this.close();
         }
     };
