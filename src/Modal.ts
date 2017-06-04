@@ -34,8 +34,8 @@ export class ModalFooter {
      (keydown.esc)="closeOnEscape ? close() : 0"
      [ngClass]="{ in: isOpened, fade: isOpened }"
      [ngStyle]="{ display: isOpened ? 'block' : 'none' }"
-     (click)="closeOnOutsideClick ? checkClose($event) : 0">
-    <div [class]="'modal-dialog ' + modalClass">
+     (click)="checkClose($event)">
+    <div [class]="'modal-dialog ' + modalClass" #modalContent>
         <div class="modal-content" tabindex="0" *ngIf="isOpened">
             <div class="modal-header">
                 <button *ngIf="!hideCloseButton" type="button" class="close" data-dismiss="modal" [attr.aria-label]="cancelButtonLabel || 'Close'" (click)="close()"><span aria-hidden="true">&times;</span></button>
@@ -82,9 +82,6 @@ export class Modal {
     @Input()
     public submitButtonLabel: string;
 
-    @Input()
-    public backdrop:boolean = true;
-
     // -------------------------------------------------------------------------
     // Outputs
     // -------------------------------------------------------------------------
@@ -107,6 +104,9 @@ export class Modal {
     // -------------------------------------------------------------------------
     // Private properties
     // -------------------------------------------------------------------------
+
+    @ViewChild('modalContent')
+    private contentEl: ElementRef;
 
     @ViewChild("modalRoot")
     public modalRoot: ElementRef;
@@ -160,19 +160,17 @@ export class Modal {
     // Private Methods
     // -------------------------------------------------------------------------
 
-    public checkClose(event: MouseEvent) {
-	if(this.closeOnOutsideClick && $(event.target).hasClass('modal')) {
-	    this.close();
-	}
+    private checkClose(event: MouseEvent): void {
+        if (this.closeOnOutsideClick === true && this.modalRoot.nativeElement === event.target) {
+            this.close();
+        }
     }
 
     private createBackDrop() {
         this.backdropElement = document.createElement("div");
+        this.backdropElement.classList.add("modal-backdrop");
         this.backdropElement.classList.add("fade");
         this.backdropElement.classList.add("in");
-        if(this.backdrop) {
-            this.backdropElement.classList.add("modal-backdrop");
-        }
     }
 
 }
