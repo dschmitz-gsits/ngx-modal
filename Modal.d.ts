@@ -24,6 +24,6 @@ export declare class Modal {
     ngOnDestroy(): void;
     open(...args: any[]): void;
     close(...args: any[]): void;
-    private checkClose(event);
+    checkClose(event);
     private createBackDrop();
 }
