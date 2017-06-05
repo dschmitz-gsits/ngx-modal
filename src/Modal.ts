@@ -156,15 +156,15 @@ export class Modal {
         document.body.className = document.body.className.replace(/modal-open\b/, "");
     }
 
-    // -------------------------------------------------------------------------
-    // Private Methods
-    // -------------------------------------------------------------------------
-
-    private checkClose(event: MouseEvent): void {
+    checkClose(event: MouseEvent): void {
         if (this.closeOnOutsideClick === true && this.modalRoot.nativeElement === event.target) {
             this.close();
         }
     }
+
+    // -------------------------------------------------------------------------
+    // Private Methods
+    // -------------------------------------------------------------------------
 
     private createBackDrop() {
         this.backdropElement = document.createElement("div");
