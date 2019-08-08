@@ -1,9 +1,9 @@
-import {Component} from "@angular/core";
+import {Component} from '@angular/core';
 
 @Component({
-    selector: "no-close-button-modal",
+    selector: 'no-simple-close-modal',
     template: `
-<route-modal [cancelUrl]="['/']" [hideCloseButton]="true">
+<route-modal [cancelUrl]="['/']" [closeOnEscape]="false" [closeOnOutsideClick]="false">
     <modal-header>
         <h1>I am first modal</h1>
     </modal-header>
@@ -16,6 +16,4 @@ import {Component} from "@angular/core";
 </route-modal>
 `
 })
-export class NoCloseButtonModal {
-
-}
+export class NoSimpleCloseModalComponent { }
