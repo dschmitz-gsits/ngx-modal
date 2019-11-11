@@ -5,7 +5,8 @@ import {
   EventEmitter,
   ElementRef,
   ViewChild,
-  OnDestroy
+  OnDestroy,
+  ChangeDetectorRef
 } from '@angular/core';
 
 @Component({
@@ -147,7 +148,7 @@ export class ModalComponent implements OnDestroy {
   // Constructor
   // -------------------------------------------------------------------------
 
-  constructor() {
+  constructor(private readonly cdr: ChangeDetectorRef) {
     this.createBackDrop();
   }
 
@@ -166,6 +167,7 @@ export class ModalComponent implements OnDestroy {
     ) {
       document.body.removeChild(this.backdropElement);
     }
+    this.cdr.detectChanges();
   }
 
   // -------------------------------------------------------------------------
@@ -180,6 +182,7 @@ export class ModalComponent implements OnDestroy {
     this.backdropElement && document.body.appendChild(this.backdropElement);
     window.setTimeout(() => this.modalRoot.nativeElement.focus(), 0);
     document.body.className += ' modal-open';
+    this.cdr.detectChanges();
   }
 
   close(...args: any[]) {
@@ -192,6 +195,7 @@ export class ModalComponent implements OnDestroy {
       /modal-open\b/,
       ''
     );
+    this.cdr.detectChanges();
   }
 
   checkClose(event: MouseEvent): void {
