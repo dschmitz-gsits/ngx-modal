@@ -167,7 +167,6 @@ export class ModalComponent implements OnDestroy {
     ) {
       document.body.removeChild(this.backdropElement);
     }
-    this.cdr.detectChanges();
   }
 
   // -------------------------------------------------------------------------
