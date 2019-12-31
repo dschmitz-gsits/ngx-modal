@@ -1,7 +1,7 @@
-import {Component} from "@angular/core";
+import {Component} from '@angular/core';
 
 @Component({
-    selector: "simple-router-modal",
+    selector: 'simple-router-modal',
     template: `
 <route-modal [cancelUrl]="['../']">
     <modal-header>
@@ -16,6 +16,4 @@ import {Component} from "@angular/core";
 </route-modal>
 `
 })
-export class SimpleRouterModal {
-
-}
+export class SimpleRouterModalComponent { }

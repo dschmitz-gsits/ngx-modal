@@ -4,35 +4,37 @@ import {
   Output,
   EventEmitter,
   ElementRef,
-  ViewChild
-} from "@angular/core";
+  ViewChild,
+  OnDestroy,
+  ChangeDetectorRef
+} from '@angular/core';
 
 @Component({
-  selector: "modal-header",
+  selector: 'modal-header',
   template: `
     <ng-content></ng-content>
   `
 })
-export class ModalHeader {}
+export class ModalHeaderComponent {}
 
 @Component({
-  selector: "modal-content",
+  selector: 'modal-content',
   template: `
     <ng-content></ng-content>
   `
 })
-export class ModalContent {}
+export class ModalContentComponent {}
 
 @Component({
-  selector: "modal-footer",
+  selector: 'modal-footer',
   template: `
     <ng-content></ng-content>
   `
 })
-export class ModalFooter {}
+export class ModalFooterComponent {}
 
 @Component({
-  selector: "modal",
+  selector: 'modal',
   template: `
     <div
       class="modal"
@@ -40,13 +42,15 @@ export class ModalFooter {}
       role="dialog"
       #modalRoot
       (keydown.esc)="closeOnEscape ? close() : 0"
-      [ngClass]="{ in: isOpened, fade: isOpened }"
+      [ngClass]="{ in: isOpened, fade: isOpened, show: isOpened }"
       [ngStyle]="{ display: isOpened ? 'block' : 'none' }"
       (mousedown)="checkClose($event)"
     >
-      <div [class]="'modal-dialog ' + modalClass" #modalContent>
+      <div class="modal-dialog" [ngClass]="modalClass" #modalContent>
         <div class="modal-content" tabindex="0" *ngIf="isOpened">
           <div class="modal-header">
+            <h4 class="modal-title" *ngIf="title">{{ title }}</h4>
+            <ng-content select="modal-header"></ng-content>
             <button
               *ngIf="!hideCloseButton"
               type="button"
@@ -57,8 +61,6 @@ export class ModalFooter {}
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title" *ngIf="title">{{ title }}</h4>
-            <ng-content select="modal-header"></ng-content>
           </div>
           <div class="modal-body">
             <ng-content select="modal-content"></ng-content>
@@ -88,7 +90,7 @@ export class ModalFooter {}
     </div>
   `
 })
-export class Modal {
+export class ModalComponent implements OnDestroy {
   // -------------------------------------------------------------------------
   // Inputs
   // -------------------------------------------------------------------------
@@ -97,10 +99,10 @@ export class Modal {
   public modalClass: string;
 
   @Input()
-  public closeOnEscape: boolean = true;
+  public closeOnEscape = true;
 
   @Input()
-  public closeOnOutsideClick: boolean = true;
+  public closeOnOutsideClick = true;
 
   @Input()
   public title: string;
@@ -137,10 +139,7 @@ export class Modal {
   // Private properties
   // -------------------------------------------------------------------------
 
-  @ViewChild("modalContent")
-  private contentEl: ElementRef;
-
-  @ViewChild("modalRoot")
+  @ViewChild('modalRoot', { static: true })
   public modalRoot: ElementRef;
 
   private backdropElement: HTMLElement;
@@ -149,7 +148,7 @@ export class Modal {
   // Constructor
   // -------------------------------------------------------------------------
 
-  constructor() {
+  constructor(private readonly cdr: ChangeDetectorRef) {
     this.createBackDrop();
   }
 
@@ -160,13 +159,14 @@ export class Modal {
   ngOnDestroy() {
     document.body.className = document.body.className.replace(
       /modal-open\b/,
-      ""
+      ''
     );
     if (
       this.backdropElement &&
       this.backdropElement.parentNode === document.body
-    )
+    ) {
       document.body.removeChild(this.backdropElement);
+    }
   }
 
   // -------------------------------------------------------------------------
@@ -180,7 +180,8 @@ export class Modal {
     this.onOpen.emit(args);
     this.backdropElement && document.body.appendChild(this.backdropElement);
     window.setTimeout(() => this.modalRoot.nativeElement.focus(), 0);
-    document.body.className += " modal-open";
+    document.body.className += ' modal-open';
+    this.cdr.detectChanges();
   }
 
   close(...args: any[]) {
@@ -191,8 +192,9 @@ export class Modal {
     this.backdropElement && document.body.removeChild(this.backdropElement);
     document.body.className = document.body.className.replace(
       /modal-open\b/,
-      ""
+      ''
     );
+    this.cdr.detectChanges();
   }
 
   checkClose(event: MouseEvent): void {
@@ -209,12 +211,13 @@ export class Modal {
   // -------------------------------------------------------------------------
 
   private createBackDrop() {
-    if (!document.getElementById("modal-backdrop")) {
-      this.backdropElement = document.createElement("div");
-      this.backdropElement.setAttribute("id", "modal-backdrop");
-      this.backdropElement.classList.add("modal-backdrop");
-      this.backdropElement.classList.add("fade");
-      this.backdropElement.classList.add("in");
+    if (!document.getElementById('modal-backdrop')) {
+      this.backdropElement = document.createElement('div');
+      this.backdropElement.setAttribute('id', 'modal-backdrop');
+      this.backdropElement.classList.add('modal-backdrop');
+      this.backdropElement.classList.add('fade');
+      this.backdropElement.classList.add('in');
+      this.backdropElement.classList.add('show');
     }
   }
 }
